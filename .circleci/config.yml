@@ -51,10 +51,19 @@ jobs:
             @semantic-release/exec \
             @semantic-release/github
       - run: npx semantic-release
+      - run: |
+          if [ "$(find ./artifacts -type f -name '*.nupkg' | wc -l)" -eq 0 ]; then
+            echo "{}" > ./artifacts/release.json
+            echo "No packages found - release.json written with empty object."
+          else
+            echo '{"hasRelease": true}' > ./artifacts/release.json
+            echo "Packages found - release.json written with release indicator"
+          fi
       - persist_to_workspace:
           root: artifacts
           paths:
             - "*.nupkg"
+            - "release.json"
       - save_cache:
           key: node-deps-{{ checksum "SemanticRelease.DotNet.sln" }}
           paths: ~/.npm
@@ -63,6 +72,15 @@ jobs:
     steps:
       - attach_workspace:
           at: ./artifacts
+      - run:
+          name: Log Release Summary
+          command: |
+            if jq -e '.hasRelease' ./artifacts/release.json > /dev/null; then
+              echo "Release triggered"
+            else
+              echo "No release triggered"
+              circleci-agent step halt
+            fi
       - run:
           name: Validate presence of API Key
           command: 'echo "Key is: ${NugetAuthentication:0:4}****"'
