@@ -73,9 +73,9 @@ jobs:
       - attach_workspace:
           at: ./artifacts
       - run:
-        name: Install jq
-        command: |
-          apt-get update && apt-get install -y jq
+          name: Install jq
+          command: |
+            apt-get update && apt-get install -y jq
       - run:
           name: Log Release Summary
           command: |
