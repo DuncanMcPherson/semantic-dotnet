@@ -40,7 +40,7 @@ jobs:
             && apt-get install -y nodejs
       - restore_cache:
           keys:
-            - node-deps-{{ checksum "SemanticRelease.CommitAnalysis.sln" }}
+            - node-deps-{{ checksum "SemanticRelease.DotNet.sln" }}
             - node-deps-
       - run: |
           npm install --no-save \
@@ -57,7 +57,7 @@ jobs:
           paths:
             - "*.nupkg"
       - save_cache:
-          key: node-deps-{{ checksum "SemanticRelease.CommitAnalysis.sln" }}
+          key: node-deps-{{ checksum "SemanticRelease.DotNet.sln" }}
           paths: ~/.npm
   publish:
     executor: dotnet-executor
