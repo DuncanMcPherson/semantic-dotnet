@@ -83,7 +83,7 @@ workflows:
           context: DeploymentKeys
           filters:
             branches:
-              only: master
+              only: main
             tags:
               ignore: /.*/
       - publish:
@@ -95,6 +95,6 @@ workflows:
       - build:
           filters:
             branches:
-              ignore: master
+              ignore: main
             tags:
               ignore: /.*/
