@@ -50,15 +50,19 @@ The base [semantic-release](https://nuget.org/packages/dotnet-semantic-release) 
 
 ### Options
 
-| Name            | Description                                                        | Default Value  | Required |
-|-----------------|--------------------------------------------------------------------|----------------|----------|
-| `build`         | Whether the plugin should build the project                        | `true`         | ❌        |
-| `restore`       | Whether the plugin should restore NuGet packages                   | `true`         | ❌        |
-| `publish`       | Whether the plugin should try to publish publishable projects      | `false`        | ❌        |
-| `pack`          | Whether the plugin should try to pack projects into NuGet packages | `false`        | ❌        |
-| `useSkipFlags`  | Injects `--no-build` and `--no-restore` into `dotnet` commands     | `true`         | ❌        |
-| `configuration` | Which configuration to use for `build`, `pack`, and `publish`      | `null`         | ✅        |
-| `outputDir`     | Where `pack` should put the associated package files               | `null`         | ❌        |
+| Name            | Description                                                                                  | Default Value | Required |
+|-----------------|----------------------------------------------------------------------------------------------|---------------|----------|
+| `build`         | Whether the plugin should build the project                                                  | `true`        | ❌        |
+| `restore`       | Whether the plugin should restore NuGet packages                                             | `true`        | ❌        |
+| `publish`       | Whether the plugin should try to publish publishable projects                                | `false`       | ❌        |
+| `pack`          | Whether the plugin should try to pack projects into NuGet packages                           | `false`       | ❌        |
+| `useSkipFlags`  | Injects `--no-build` and `--no-restore` into `dotnet` commands                               | `true`        | ❌        |
+| `configuration` | Which configuration to use for `build`, `pack`, and `publish`                                | `null`        | ✅        |
+| `outputDir`     | Where `pack` should put the associated package files                                         | `null`        | ❌        |
+| `slnOrProject`  | The solution or project that you want to build. Glob patterns are not accepted at this time  | `null`        | ❌        |
+
+**NOTE**: `outputDir` is **NOT** required and your artifacts will be placed in the appropriate location based on the `pack` command.
+The default location is `bin/Release/<Framework>/` per the behavior of `dotnet pack`.
 
 ## License
 
