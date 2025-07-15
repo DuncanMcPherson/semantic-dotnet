@@ -42,14 +42,13 @@ jobs:
           keys:
             - node-deps-{{ checksum "SemanticRelease.DotNet.sln" }}
             - node-deps-
+      - run: mkdir -p artifacts
       - run: |
           npm install --no-save \
             semantic-release \
             @semantic-release/commit-analyzer \
             @semantic-release/release-notes-generator \
-            @semantic-release/changelog \
             @semantic-release/exec \
-            @semantic-release/git \
             @semantic-release/github
       - run: npx semantic-release
       - persist_to_workspace:
@@ -64,7 +63,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ./artifacts
-      - run: ls -R
       - run:
           name: Validate presence of API Key
           command: 'echo "Key is: ${NugetAuthentication:0:4}****"'
