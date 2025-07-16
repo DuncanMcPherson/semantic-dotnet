@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  semantic-dotnet: vectra/orb-semantic-dotnet@1
 
 executors:
   dotnet-executor:
@@ -19,97 +21,17 @@ jobs:
       - checkout
       - run: dotnet restore
       - run: dotnet build --no-restore -c Release
-  pack:
-    executor: dotnet-executor
-    steps:
-      - checkout:
-          path: .
-          fetch-depth: 0
-      - run: dotnet restore
-      - run:
-          name: Install Node.js
-          command: |
-            apt-get update \
-            && apt-get install -y ca-certificates curl gnupg \
-            && mkdir -p /etc/apt/keyrings \
-            && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
-                 | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
-            && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" \
-                 > /etc/apt/sources.list.d/nodesource.list \
-            && apt-get update \
-            && apt-get install -y nodejs
-      - restore_cache:
-          keys:
-            - node-deps-{{ checksum "SemanticRelease.DotNet.sln" }}
-            - node-deps-
-      - run: mkdir -p artifacts
-      - run: |
-          npm install --no-save \
-            semantic-release \
-            @semantic-release/commit-analyzer \
-            @semantic-release/release-notes-generator \
-            @semantic-release/exec \
-            @semantic-release/github
-      - run: npx semantic-release
-      - run: |
-          if [ "$(find ./artifacts -type f -name '*.nupkg' | wc -l)" -eq 0 ]; then
-            echo "{}" > ./artifacts/release.json
-            echo "No packages found - release.json written with empty object."
-          else
-            echo '{"hasRelease": true}' > ./artifacts/release.json
-            echo "Packages found - release.json written with release indicator"
-          fi
-      - persist_to_workspace:
-          root: artifacts
-          paths:
-            - "*.nupkg"
-            - "release.json"
-      - save_cache:
-          key: node-deps-{{ checksum "SemanticRelease.DotNet.sln" }}
-          paths: ~/.npm
-  publish:
-    executor: dotnet-executor
-    steps:
-      - attach_workspace:
-          at: ./artifacts
-      - run:
-          name: Install jq
-          command: |
-            apt-get update && apt-get install -y jq
-      - run:
-          name: Log Release Summary
-          command: |
-            if jq -e '.hasRelease' ./artifacts/release.json > /dev/null; then
-              echo "Release triggered"
-            else
-              echo "No release triggered"
-              circleci-agent step halt
-            fi
-      - run:
-          name: Validate presence of API Key
-          command: 'echo "Key is: ${NugetAuthentication:0:4}****"'
-      - run:
-          name: Push to NuGet
-          command: |
-            dotnet nuget push "artifacts/*.nupkg" \
-              --source "https://api.nuget.org/v3/index.json" \
-              --api-key "$NugetAuthentication" \
-              --skip-duplicate
 
 workflows:
   release:
     jobs:
-      - pack:
+      - semantic-dotnet/pack:
+          solution: SemanticRelease.DotNet.sln
           context: DeploymentKeys
-          filters:
-            branches:
-              only: main
-            tags:
-              ignore: /.*/
-      - publish:
+      - semantic-dotnet/publish:
           context: DeploymentKeys
           requires:
-            - pack
+            - semantic-dotnet/pack
   pr-checks:
     jobs:
       - build:
