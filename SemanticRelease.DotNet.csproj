@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
     <Authors>Duncan McPherson</Authors>
-    <PackageProjectUrl>https://github.com/DuncanMcPherson/semantic-commit-analyzer</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/DuncanMcPherson/semantic-commit-analyzer</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Vectrionyx/semantic-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Vectrionyx/semantic-dotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
