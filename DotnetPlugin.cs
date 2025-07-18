@@ -10,6 +10,10 @@ namespace SemanticRelease.DotNet
     [UsedImplicitly]
     public class DotnetPlugin : ISemanticPlugin
     {
+        /// <summary>
+        /// Registers the plugin with the specified SemanticLifecycle lifecycle. It hooks into the lifecycle's "prepare" phase to execute the plugin's defined logic.
+        /// </summary>
+        /// <param name="lifecycle">The SemanticLifecycle instance to register the plugin with. This defines the phases of the Semantic Release process.</param>
         public void Register(SemanticLifecycle lifecycle)
         {
             lifecycle.OnPrepare(RunPlugin);
