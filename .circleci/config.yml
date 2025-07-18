@@ -28,6 +28,11 @@ workflows:
       - semantic-dotnet/pack:
           solution: SemanticRelease.DotNet.sln
           context: DeploymentKeys
+          filters:
+            branches:
+              only: main
+            tags:
+              ignore: /.*/
       - semantic-dotnet/publish:
           context: DeploymentKeys
           requires:
