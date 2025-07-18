@@ -19,6 +19,12 @@ namespace SemanticRelease.DotNet
             lifecycle.OnPrepare(RunPlugin);
         }
 
+        /// <summary>
+        /// Executes the defined logic of the DotNet plugin during the "prepare" phase of the Semantic Release lifecycle.
+        /// Includes operations such as restoring, building, packing, and publishing .NET projects based on the plugin configuration.
+        /// </summary>
+        /// <param name="context">The release context containing configuration and state information for the current release process.</param>
+        /// <returns>A task that represents the asynchronous operation of the plugin execution.</returns>
         private static async Task RunPlugin(ReleaseContext context)
         {
             Console.WriteLine("Beginning step 'prepare' for 'DotNet'...");
